@@ -45,7 +45,7 @@ async def start_session(context: JobContext):
     model = GeminiRealtime(
         model="gemini-2.0-flash-live-001",
         # When GOOGLE_API_KEY is set in .env - DON'T pass api_key parameter
-        api_key="AIzaSyBHRRbLb280VP4bj7sYN1tuJJSFRjxrKrY", 
+        api_key=os.getenv(GOOGLE_API_KEY), 
         config=GeminiLiveConfig(
             voice="Leda",  # Puck, Charon, Kore, Fenrir, Aoede, Leda, Orus, and Zephyr.
             response_modalities=["AUDIO"]
