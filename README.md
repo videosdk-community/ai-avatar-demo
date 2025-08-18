@@ -1,4 +1,4 @@
-# Building an AI Avatar with VideoSDK Agent
+# Build Real-Time Video Avatars for Your App or Website in Minutes
 
 This repository demonstrates integrating Simli avatar with VideoSDK Agent SDK, providing AI agents with a human-looking face for interactive voice and video conversations.
 
