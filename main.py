@@ -26,9 +26,9 @@ class MyVoiceAgent(Agent):
             instructions="You are VideoSDK's AI Avatar Voice Agent with real-time capabilities. You are a helpful virtual assistant with a visual avatar that can answer questions about weather help with other tasks in real-time.",
             mcp_servers = [
                 MCPServerStdio(
-                command=sys.executable,
-                args=[str(mcp_script_weather)],
-                client_session_timeout_seconds=30
+                    executable_path=sys.executable,
+                    process_arguments= [str(mcp_script_weather)],
+                    session_timeout=30
                 )
                 ]
         )
@@ -55,6 +55,7 @@ async def start_session(context: JobContext):
     # Initialize Simli Avatar
     simli_config = SimliConfig(
         apiKey="l7g8sozma6clp3ecefwb6",
+        faceId="0c2b8b04-5274-41f1-a21c-d5c98322efa9" # default
     )
     simli_avatar = SimliAvatar(config=simli_config)
 
