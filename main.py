@@ -1,12 +1,14 @@
-import asyncio
 import sys
 from pathlib import Path
 import requests
-from videosdk.agents import Agent, AgentSession, RealTimePipeline, JobContext, RoomOptions, WorkerJob, MCPServerStdio
+from videosdk.agents import Agent, AgentSession, Pipeline, JobContext, RoomOptions, WorkerJob, MCPServerStdio
 from videosdk.plugins.google import GeminiRealtime, GeminiLiveConfig
 from videosdk.plugins.simli import SimliAvatar, SimliConfig
 from dotenv import load_dotenv
 import os
+import logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", handlers=[logging.StreamHandler()])
+
 
 load_dotenv(override=True)
 
@@ -26,9 +28,9 @@ class MyVoiceAgent(Agent):
             instructions="You are VideoSDK's AI Avatar Voice Agent with real-time capabilities. You are a helpful virtual assistant with a visual avatar that can answer questions about weather help with other tasks in real-time.",
             mcp_servers = [
                 MCPServerStdio(
-                    executable_path=sys.executable,
-                    process_arguments= [str(mcp_script_weather)],
-                    session_timeout=30
+                    command=sys.executable,
+                    args=[str(mcp_script_weather)],
+                    client_session_timeout_seconds=30
                 )
                 ]
         )
@@ -43,9 +45,9 @@ class MyVoiceAgent(Agent):
 async def start_session(context: JobContext):
     # Initialize Gemini Realtime model
     model = GeminiRealtime(
-        model="gemini-2.0-flash-live-001",
+        model="gemini-3.1-flash-live-preview",
         # When GOOGLE_API_KEY is set in .env - DON'T pass api_key parameter
-        api_key=os.getenv(GOOGLE_API_KEY), 
+        api_key=os.getenv("GOOGLE_API_KEY"),
         config=GeminiLiveConfig(
             voice="Leda",  # Puck, Charon, Kore, Fenrir, Aoede, Leda, Orus, and Zephyr.
             response_modalities=["AUDIO"]
@@ -60,8 +62,8 @@ async def start_session(context: JobContext):
     simli_avatar = SimliAvatar(config=simli_config)
 
     # Create pipeline with avatar
-    pipeline = RealTimePipeline(
-        model=model,
+    pipeline = Pipeline(
+        llm=model,
         avatar=simli_avatar
     )
     
@@ -70,13 +72,7 @@ async def start_session(context: JobContext):
         pipeline=pipeline
     )
 
-    try:
-        await context.connect()
-        await session.start()
-        await asyncio.Event().wait()
-    finally:
-        await session.close()
-        await context.shutdown()
+    await session.start(wait_for_participant=True, run_until_shutdown=True)
 
 def make_context() -> JobContext:
     auth_token = os.getenv("VIDEOSDK_AUTH_TOKEN")
