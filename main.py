@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-import requests
 from videosdk.agents import Agent, AgentSession, Pipeline, JobContext, RoomOptions, WorkerJob, MCPServerStdio
 from videosdk.plugins.google import GeminiRealtime, GeminiLiveConfig
 from videosdk.plugins.simli import SimliAvatar, SimliConfig
@@ -11,15 +10,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(level
 
 
 load_dotenv(override=True)
-
-def get_room_id(auth_token: str) -> str:
-    url = "https://api.videosdk.live/v2/rooms"
-    headers = {
-        "Authorization": auth_token
-    }
-    response = requests.post(url, headers=headers)
-    response.raise_for_status()
-    return response.json()["roomId"]
 
 class MyVoiceAgent(Agent):
     def __init__(self):
@@ -75,13 +65,9 @@ async def start_session(context: JobContext):
     await session.start(wait_for_participant=True, run_until_shutdown=True)
 
 def make_context() -> JobContext:
-    auth_token = os.getenv("VIDEOSDK_AUTH_TOKEN")
-    room_id = get_room_id(auth_token)
     room_options = RoomOptions(
-        room_id=room_id,
-        auth_token=auth_token,
         name="Simli Avatar Realtime Agent",
-        playground=True 
+        playground=True
     )
     return JobContext(room_options=room_options)
 

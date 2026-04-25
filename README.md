@@ -51,7 +51,7 @@ cp .env.example .env
 
 Edit the `.env` file and add your API keys:
 
-- `VIDEOSDK_AUTH_TOKEN`: Your VideoSDK authentication token
+- `VIDEOSDK_API_KEY` and `VIDEOSDK_SECRET_KEY`: Your VideoSDK authentication token
 - `GOOGLE_API_KEY`: Your Google API key for Gemini
 - `SIMLI_API_KEY`: Your Simli API key
 - `SIMLI_FACE_ID`: Your Simli Face ID

@@ -103,9 +103,9 @@ typing-inspection==0.4.1
 urllib3==2.5.0
 uvicorn==0.35.0
 videosdk==0.2.0
-videosdk-agents>=1.0.0
-videosdk-plugins-google>=1.0.0
-videosdk-plugins-simli>=1.0.0
+videosdk-agents>=1.0.10
+videosdk-plugins-google>=1.0.10
+videosdk-plugins-simli>=1.0.10
 vsaiortc==0.0.8
 websockets==15.0.1
 yarl==1.20.1
